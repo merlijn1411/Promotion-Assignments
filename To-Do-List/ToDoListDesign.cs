@@ -12,40 +12,68 @@ namespace To_Do_List
             InitializeComponent();
         }
 
-        DataTable todoList = new DataTable();
+        DataTable toDoList = new DataTable();
+
         bool isEditing = false;
+
+
 
         private void ToDoList_Load(object sender, EventArgs e)
         {
-            todoList.Columns.Add("Title");
-            todoList.Columns.Add("Description");
+            toDoList.Columns.Add("Title");
+            toDoList.Columns.Add("Description");
 
-            ToDoListView.DataSource = todoList;
+            ToDoListView.DataSource = toDoList;
+
+            Instantiate_StrecthRowDescription();
+            Instantiate_ObjectScaleWindowSize();
+        }
+
+        private void Instantiate_StrecthRowDescription()
+        {
+
+        }
+
+        private void Instantiate_ObjectScaleWindowSize()
+        {
+            //This represent the location and size of a rectangle and set them equal to the working area of the primary display.
+            System.Drawing.Rectangle workingRetactangle = Screen.PrimaryScreen.WorkingArea;
+
+            //The Size of the form is equal to 50% of the Height and of the width
+            this.Size = new System.Drawing.Size(Convert.ToInt32(0.75 * workingRetactangle.Width), Convert.ToInt32(0.5 * workingRetactangle.Width));
+
+            //The location of the form set to be 10,10 from upper left corner of display. 
+            this.Location = new System.Drawing.Point(10, 10);
         }
 
         private void NewButton_Click(object sender, EventArgs e)
         {
             Title.Text = "";
             Description.Text = "";
+
+            string sent = Description.Text;
+
+            Description.AppendText(sent);
+            Description.AppendText(Environment.NewLine);
         }
 
         private void EditButton_Click(object sender, EventArgs e)
         {
             isEditing = true;
-            Title.Text = todoList.Rows[ToDoListView.CurrentCell.RowIndex].ItemArray[0].ToString();
-            Description.Text = todoList.Rows[ToDoListView.CurrentCell.RowIndex].ItemArray[1].ToString();
+            Title.Text = toDoList.Rows[ToDoListView.CurrentCell.RowIndex].ItemArray[0].ToString();
+            Description.Text = toDoList.Rows[ToDoListView.CurrentCell.RowIndex].ItemArray[1].ToString();
         }
 
         private void SaveButton_Click(object sender, EventArgs e)
         {
             if (isEditing)
             {
-                todoList.Rows[ToDoListView.CurrentCell.RowIndex]["Title"] = Title.Text;
-                todoList.Rows[ToDoListView.CurrentCell.RowIndex]["Description"] = Description.Text;
+                toDoList.Rows[ToDoListView.CurrentCell.RowIndex]["Title"] = Title.Text;
+                toDoList.Rows[ToDoListView.CurrentCell.RowIndex]["Description"] = Description.Text;
             }
             else
             {
-                todoList.Rows.Add(Title.Text, Description.Text);
+                toDoList.Rows.Add(Title.Text, Description.Text);
             }
 
             Title.Text = "";
@@ -57,14 +85,12 @@ namespace To_Do_List
         {
             try
             {
-                todoList.Rows[ToDoListView.CurrentCell.RowIndex].Delete();
+                toDoList.Rows[ToDoListView.CurrentCell.RowIndex].Delete();
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error" + ex);
             }
         }
-
-
     }
 }
